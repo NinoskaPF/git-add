@@ -1,11 +1,19 @@
 // header.ts - CABEÇALHO do site (core/layout).
-// Semana 6 · Aula 2: ganha MENU RESPONSIVO (botão "hambúrguer" no celular).
+// Aula 2: menu responsivo. Aula 3: vai virar uma <mat-toolbar> do Angular Material.
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+// TODO 3 (TOOLBAR) - parte A: o header está em core/ e importa SÓ o que usa (sem o SharedModule).
+//   1) importe:
+
+//   2) acrescente MatToolbarModule, MatButtonModule e MatIconModule no array imports.
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule, MatIconModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
@@ -13,14 +21,13 @@ export class Header {
   protected readonly titulo = 'Portal do Aluno';
   protected readonly curso = 'Desenvolvedor Front-End [Angular] - SCTEC';
 
-  // Estado do menu no celular (signal: a tela atualiza sozinha).
   protected readonly menuAberto = signal(false);
 
-  // TODO 4 (MENU RESPONSIVO) - parte A: crie os dois métodos:
-    alternarMenu(): void { 
-      this.menuAberto.update((aberto) => !aberto); 
-    }
-    protected fecharMenu(): void { 
-      this.menuAberto.set(false); 
-    }
+  alternarMenu(): void {
+    this.menuAberto.update((aberto) => !aberto);
+  }
+
+  fecharMenu(): void {
+    this.menuAberto.set(false);
+  }
 }
