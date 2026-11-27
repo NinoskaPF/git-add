@@ -14,10 +14,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const ehNossaApi = req.url.startsWith(API_AUTH);
 
   // A requisição é IMUTÁVEL: clone() cria uma cópia com o cabeçalho novo
-  // TODO 3 (INTERCEPTOR) - parte A: a linha abaixo deixa a requisição como veio. Troque por:
-    const requisicao =
-      token && ehNossaApi ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
-
+  const requisicao =
+    token && ehNossaApi ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(requisicao).pipe(
     catchError((erro: HttpErrorResponse) => {

@@ -51,22 +51,22 @@ export class Login {
       this.form.markAllAsTouched();
       return;
     }
-    // TODO 2 (PÁGINA DE LOGIN): chame o AuthService e trate os dois caminhos (sucesso e erro):
-      this.carregando.set(true);
-      this.erro.set('');
-      this.auth.login(this.form.getRawValue()).subscribe({
-        next: (usuario) => {
-          this.carregando.set(false);
-          this.snackBar.open(`Bem-vindo(a), ${usuario.nome}!`, 'OK', { duration: 3000 });
-          const destino = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/inscricoes';
-          this.router.navigateByUrl(destino);
-        },
-        error: (erro: HttpErrorResponse) => {
-          this.carregando.set(false);
-          this.erro.set(mensagemDeErro(erro.status));
-        },
-      });
-    this.erro.set('TODO 2: a página de login ainda não chama o AuthService.');
+    this.carregando.set(true);
+    this.erro.set('');
+
+    this.auth.login(this.form.getRawValue()).subscribe({
+      next: (usuario) => {
+        this.carregando.set(false);
+        this.snackBar.open(`Bem-vindo(a), ${usuario.nome}!`, 'OK', { duration: 3000 });
+        // Volta para a página que a pessoa tentou abrir (o guard guardou em ?returnUrl=)
+        const destino = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/inscricoes';
+        this.router.navigateByUrl(destino);
+      },
+      error: (erro: HttpErrorResponse) => {
+        this.carregando.set(false);
+        this.erro.set(mensagemDeErro(erro.status));
+      },
+    });
   }
 }
 

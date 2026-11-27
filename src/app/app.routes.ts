@@ -27,8 +27,7 @@ export const routes: Routes = [
   {
     // Semana 7 · Aula 1: página que lê o ESTADO GLOBAL (Store) das inscrições
     path: 'inscricoes',
-    // TODO 4 - parte B: proteja esta rota. Acrescente aqui:
-    canActivate: [authGuard],
+    canActivate: [authGuard], // Aula 2: só quem está LOGADO
     loadComponent: () =>
       import('@features/inscricoes/minhas-inscricoes/minhas-inscricoes').then((m) => m.MinhasInscricoes),
     title: 'Minhas inscrições | Projeto SCTEC',
@@ -46,8 +45,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    // TODO 5 - parte B: só o perfil admin. Acrescente aqui:
-    canMatch: [perfilGuard('admin')],
+    canMatch: [perfilGuard('admin')], // só o perfil admin: os outros nem baixam o código
     loadComponent: () => import('@features/admin/painel-admin/painel-admin').then((m) => m.PainelAdmin),
     title: 'Admin | Projeto SCTEC',
   },

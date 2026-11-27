@@ -10,8 +10,11 @@ import { Service, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, map, switchMap, tap } from 'rxjs';
 import { Credenciais, RespostaLogin, Usuario } from '@shared/models/usuario';
+// TODO 4 - parte C: descomente depois de criar o alias @env no tsconfig.json (parte B):
+import { environment } from '@env/environment';
 
-export const API_AUTH = 'https://dummyjson.com/auth';
+// Aula 3: o endereço da API vem do ENVIRONMENT (muda entre desenvolvimento e produção)
+export const API_AUTH = environment.apiAuth; // TODO 4 - parte C: troque por environment.apiAuth
 const CHAVE_TOKEN = 'sctec.token';
 const CHAVE_USUARIO = 'sctec.usuario';
 
@@ -45,20 +48,18 @@ export class AuthService {
   }
 
   login(credenciais: Credenciais): Observable<Usuario> {
-    // TODO 1 (LOGIN NO SERVICE): apague o "throw" e escreva o fluxo do login em 3 passos:
-      return this.http.post<RespostaLogin>(`${API_AUTH}/login`, { ...credenciais, expiresInMins: 60 }).pipe(
-        tap((resposta) => this._token.set(resposta.accessToken)),        // 1) guarda o token
-        switchMap(() => this.http.get<UsuarioApi>(`${API_AUTH}/me`)),    // 2) pede o usuário (com o token)
-        map(paraUsuario),                                                // converte para o NOSSO formato
-        tap({
-          next: (usuario) => {
-            this._usuario.set(usuario);
-            this.salvarSessao();                                         // 3) persiste
-          },
-          error: () => this.limparSessao(),
-        }),
-      );
-   
+    return this.http.post<RespostaLogin>(`${API_AUTH}/login`, { ...credenciais, expiresInMins: 60 }).pipe(
+      tap((resposta) => this._token.set(resposta.accessToken)), // 1) guarda o token
+      switchMap(() => this.http.get<UsuarioApi>(`${API_AUTH}/me`)), // 2) pede o usuário (com o token)
+      map(paraUsuario), // converte para o NOSSO formato (sem senha)
+      tap({
+        next: (usuario) => {
+          this._usuario.set(usuario);
+          this.salvarSessao(); // 3) persiste
+        },
+        error: () => this.limparSessao(), // deu erro no meio do caminho: não deixa token "órfão"
+      }),
+    );
   }
 
   logout(): void {

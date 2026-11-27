@@ -6,12 +6,15 @@ import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Curso } from '@shared/models/curso';
+// TODO 4 - parte C: descomente depois de criar o alias @env no tsconfig.json (parte B):
+import { environment } from '@env/environment';
 
 @Service()
 export class CursoService {
   private http = inject(HttpClient);
   // Arquivo servido pela pasta public/ (public/api/cursos.json). Funciona como uma API de verdade.
-  private readonly url = 'api/cursos.json';
+  // Aula 3: o endereço vem do environment.
+  private readonly url = 'environment.apiCursos'; // TODO 4 - parte C: troque por environment.apiCursos
 
   listar(): Observable<Curso[]> {
     return this.http.get<Curso[]>(this.url);

@@ -3,27 +3,32 @@
 .hero .acoes a { text-decoration: none; }
 .secao { margin: espaco(1) 0 espaco(2); }
 
-// GRID que se adapta sozinho: quantas colunas de no mínimo 220px couberem.
-.etapas {
+// Semana 7 · Aula 3: "esqueleto" (placeholder) do @defer: caixas cinzas no lugar dos cartões
+.esqueleto {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: espaco(2);
+
+  div {
+    height: 160px;
+    border-radius: var(--raio);
+    background: linear-gradient(90deg, var(--borda), var(--fundo), var(--borda));
+    background-size: 200% 100%;
+    animation: brilho 1.2s infinite;
+  }
 }
 
-.etapa {
-  margin: 0;
-  border-top: 4px solid var(--borda);
-
-  &.atual { border-top-color: var(--laranja); }
-
-  h3 { margin-top: 6px; font-size: 17px; }
-  ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--texto-suave); }
+.carregando {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
 }
 
-.numero {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--laranja);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+@keyframes brilho {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .esqueleto div { animation: none; }
 }

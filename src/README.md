@@ -1,33 +1,29 @@
-# Aula 2 (24/11) · Autenticação e autorização
+# Aula 3 (26/11) · Desempenho e deploy
 
-> Pasta para usar **no seu `projeto-angular-sctec`** (com a Aula 1 concluída). Precisa de internet: a API de login é a pública **DummyJSON**. Comandos: `README_COMANDOS.md`.
-
-## Usuários de teste
-| Perfil | Usuário | Senha |
-|---|---|---|
-| Administrador | `emilys` | `emilyspass` |
-| Aluno | `averyp` | `averyppass` |
+> Pasta para usar **no seu `projeto-angular-sctec`** (com a Aula 2 concluída). Precisa de internet e de uma conta Google (Firebase) ou GitHub/e-mail (Netlify). Comandos: `README_COMANDOS.md`.
 
 ## Resumo do que fazer
-1. **Salve a Aula 1:** `git add .` e `git commit -m "feat(estado): aula 1"`.
-2. (Opcional, para conhecer a CLI) `ng g s core/auth/auth-service`, `ng g interceptor core/auth/auth`, `ng g guard core/auth/auth --implements CanActivate`, `ng g c features/auth/login`.
-3. **Apague** a pasta `src/app` e **cole** a pasta `src` desta aula por cima da sua `src`.
-4. `ng serve -o` e faça os TODOs na ordem.
+1. **Salve a Aula 2:** `git add .` e `git commit -m "feat(auth): aula 2"`.
+2. `ng g environments` (cria os arquivos e ajusta o `angular.json`).
+3. `ng build` e anote os chunks (não existe `linha-do-tempo`).
+4. **Apague** `src/app` e **cole** a `src` desta aula; cole também a pasta `public` (traz `_redirects` e `robots.txt`).
+5. `ng serve -o` e faça os TODOs na ordem. Depois, o deploy.
 
 | TODO | Onde | O que |
 |---|---|---|
-| 1 | `core/auth/auth-service.ts` | `login()`: post → token → `/auth/me` → usuário |
-| 2 | `features/auth/login/login.ts` | `subscribe`, snackbar e `returnUrl` |
-| 3 | `core/auth/auth-interceptor.ts` e `app.config.ts` | `clone` com `Authorization: Bearer` + `withInterceptors` |
-| 4 | `core/auth/auth-guard.ts` e `app.routes.ts` | `authGuard` + `canActivate` em `inscricoes` |
-| 5 | `core/auth/auth-guard.ts` e `app.routes.ts` | `perfilGuard` + `canMatch` em `admin` |
-| 6 | `core/layout/header/header.html` | Admin, usuário, Entrar e Sair com `@if` |
+| 1 | `features/inicio/inicio.html` | `@defer (on viewport)` na linha do tempo |
+| 2 | `shared/shared-module.ts`, `lista-cursos.html`, `index.html` | `NgOptimizedImage`: `[ngSrc]`, `width/height`, `priority`, `preconnect` |
+| 3 | `lista-cursos.ts`, `lista-cursos.html`, `app.config.ts` | `computed()` no lugar do método + `withPreloading` |
+| 4 | `environment.development.ts`, `tsconfig.json`, services, footer, `app.config.ts` | environments + alias `@env` |
 
-> **O erro que ensina:** depois dos TODOs 1 e 2 o login mostra **"Não autorizado (401): o token não chegou à API."** É esperado: o `/auth/me` foi sem token. O TODO 3 resolve.
+## Deploy (Etapas D e E)
+1. `ng build` → pasta `dist/projeto-angular-sctec/browser`.
+2. **Firebase:** `npm install -g firebase-tools` · `firebase login` · `firebase init hosting` (public `dist/projeto-angular-sctec/browser`, SPA **Yes**, GitHub **No**, overwrite index.html **No**) · `firebase deploy`. Modelo de `firebase.json` em `deploy/firebase.json`.
+3. **Plano B · Netlify:** app.netlify.com/drop → arraste a pasta `browser`.
 
 ## Como saber se deu certo
-- Visitante em `/inscricoes` → vai para `/login?returnUrl=%2Finscricoes` e volta depois do login.
-- `averyp`: sem link Admin; `/admin` → `/acesso-negado`.
-- `emilys`: link Admin; cadastra um curso e ele aparece em `/cursos`.
-- F5 mantém a sessão (F12 → Application → Local Storage: `sctec.token`, `sctec.usuario`); **Sair** limpa.
-- `ng build` sem erros · `git commit -m "feat(auth): login jwt, interceptor e guards"`.
+- `ng build` lista o Lazy chunk **linha-do-tempo**; no celular o aviso `NG0913` some.
+- O console não mostra mais `estaInscrito() chamado`.
+- Rodapé: **ambiente: desenvolvimento** no `ng serve` e **ambiente: produção** no site publicado.
+- Site publicado: `/cursos` direto na barra e F5 em `/inscricoes` funcionam; login funciona.
+- URL no `README.md` do seu projeto · `git commit -m "feat(deploy): desempenho e publicacao"` · `git push`.
